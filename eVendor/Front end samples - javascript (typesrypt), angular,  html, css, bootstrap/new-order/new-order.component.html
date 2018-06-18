@@ -1,0 +1,67 @@
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <!-- place order component -->
+    <div *ngIf="!showOrder">
+      <div class="order-buttons text-left">
+        <button type="button" class="btn btn-link" (click)="by='byOrder'">By Order</button>
+        <button type="button" class="btn btn-link" (click)="arrange('byVendor')">By Vendor</button>
+        <button *ngIf="(groups!==undefined && groups.length>0)" type="button" class="btn btn-link" (click)="arrange('byGroup')">By Group</button>
+      </div>
+      <ng-container *ngIf="(by == 'byOrder'); else elseTemplate"><!-- by Order -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="link">By order</h5>
+          </div>
+          <div class="card-block">
+            <order-table [itemList]="itemList" [vendors]="vendors" [by]="by" [order]="order" [isReview]="isReview"
+              (changeVendor)="changeVendor($event)"></order-table>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #elseTemplate><!-- by Vendor or By Group -->
+        <div role="tablist" aria-multiselectable="true">
+          <div class="card" *ngFor="let itemlist of itemListBy; let byInd=index">
+            <a data-toggle="collapse" data-parent="#accordion" href="#{{'i'+itemlist.id+'i'}}" aria-expanded="true">
+              <div class="card-header" role="tab" id="headingOne">
+                <h5 class="mb-0">
+                  {{itemlist.name}}
+                </h5>
+              </div>
+            </a>
+            <div id="{{'i'+itemlist.id+'i'}}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="card-block">
+                <order-table [itemList]="itemlist.items" [vendors]="vendors" [by]="by" [order]="order" [isReview]="isReview"
+                  (changeVendor)="changeVendor($event)">
+                </order-table>
+                  <div *ngIf="by=='byVendor'" class="form-group order-buttons">
+                      <label for="note">Note for {{itemlist.name}}</label>
+                      <textarea class="form-control" #textarea rows="4" (keyup)="setVendorNote(textarea.value, byInd)">{{itemlist.vendorNote}}</textarea>
+                      
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <div class="order-buttons text-left" *ngIf="!isReview">
+        <button type="button" class="btn btn-link" (click)="review()">Review</button>
+        <button type="button" class="btn btn-link text-danger" (click)="clear()">Clear</button>
+      </div>
+      <div class="order-buttons text-left" *ngIf="isReview">
+        <button type="button" class="btn btn-link" (click)="review()">Continue ordering</button>
+        <button type="button" class="btn btn-link" (click)="comparesuspend()" >Compare and Suspend</button>
+        <button type="button" class="btn btn-link" (click)="suspend()">Suspend</button>
+        <button type="button" class="btn btn-link" (click)="compare()" >Compare</button>
+        <button type="button" class="btn btn-link" (click)="submit()">Submit</button>
+      </div>
+    </div>
+    <!-- show order component -->
+    <div class="show-order">
+      <show-order *ngIf="showOrder" [order]=recentOrder></show-order>
+    </div>
+  </div>           
+  <modal (delete)="deleteSuspenedOrder()" (ok)="loadSuspendedOrder()" [modal]="modal"></modal>
+  <spinner [spinner]="spinner"></spinner>
+</div>
+

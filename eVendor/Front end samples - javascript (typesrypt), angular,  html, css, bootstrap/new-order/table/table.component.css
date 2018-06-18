@@ -1,0 +1,33 @@
+table tr:last-child{
+    border-bottom: solid 1px rgb(192, 191, 191);
+}
+table{
+    table-layout: fixed;
+}
+
+.table td{
+    border-top: solid 1px rgb(192, 191, 191);
+}
+
+.col-xs-3{
+    padding-left: 0.5rem;
+}
+
+compare{
+    background-color: yellow;
+}
+
+p{
+    margin: 0;
+}
+
+.input-group-addon{
+    padding: 0 0.5rem 0 0.5rem;
+    cursor: pointer;
+
+}
+
+.minus{
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+}

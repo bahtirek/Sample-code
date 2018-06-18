@@ -1,0 +1,76 @@
+<div class="row justify-content-center mt-5 mb-4">
+  <div class="col-md-10">
+    <h4>Orders history</h4>
+    <div class="row">
+      <div class="col-md-5">
+        <h5 *ngIf="history && history.length == 0" class="text-warning">There are no orders on this period of time</h5>
+        <ul>
+          <li *ngFor="let link of history"><button class="btn btn-link" (click)="getOrder(link.id)">{{link.date}}</button></li>
+        </ul>
+      </div>
+      
+      <div class="col-md-7">
+        <div class="form-inline">
+          <div class="form-group">
+            <select name="month" id="month" class="form-control  mr-3" [(ngModel)]="date.month" ngModel>
+                    <option value="{{month.id}}" *ngFor="let month of months">{{month.name}}</option>
+                  </select>
+            <select name="month" id="month" class="form-control " [(ngModel)]="date.year" ngModel>
+                    <option value="{{year}}" *ngFor="let year of years">{{year}}</option>
+                  </select>
+          </div>
+
+          <button class="btn btn-link pb-0 mr-3" (click)="submit()">Submit</button>
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <div class="show-order">
+      <show-order *ngIf="show.order" [order]="order" [showUpdateButton]="showUpdateButton" (updateOrder)="updateOrder()"></show-order>
+    </div>
+    <div class="float-right clearfix pt-3 pr-3" *ngIf="show.review">
+      <button type="button" class="btn btn-link" (click)="cancelUpdate()">Cancel</button>
+      <button type="button" class="btn btn-link" (click)="editUpdate()">Edit</button>
+      <button type="button" class="btn btn-link" (click)="submitUpdate()">Submit</button>
+    </div>
+
+    <div *ngIf="show.updateTable">
+        <div role="tablist" aria-multiselectable="true">
+            <div class="card" *ngFor="let vendor of itemList; let vendorInd=index">
+              <a data-toggle="collapse" data-parent="#accordion" href="#{{'i'+vendor.id+'i'}}" aria-expanded="true">
+                <div class="card-header" role="tab" id="headingOne">
+                  <h5 class="mb-0">
+                    {{vendor.name}}
+                  </h5>
+                </div>
+              </a>
+              <div id="{{'i'+vendor.id+'i'}}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="card-block">
+                  <order-table [itemList]="vendor.items" [order]="order" [isReview]="isReview" [vendors]="vendors"
+                    [onUpdate] = "true"
+                    [vendorIndex] = "vendorInd"
+                    (changeVendor)="changeVendor($event)">
+                  </order-table>
+                    <div class="form-group order-buttons">
+                        <label for="note">Note for {{vendor.name}}</label>
+                        <textarea class="form-control" #textarea rows="4" (keyup)="setVendorNote(textarea.value, vendorInd)">{{vendor.vendorNote}}</textarea>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="float-right clearfix pt-3 pr-3">
+            <button type="button" class="btn btn-link" (click)="cancelUpdate()">Cancel</button>
+            <button type="button" class="btn btn-link" (click)="reviewUpdate()">Review</button>
+          </div>
+          
+    </div>
+
+  </div>
+</div>
+<spinner [spinner]="spinner"></spinner>
+<modal [modal]="modal"></modal>
